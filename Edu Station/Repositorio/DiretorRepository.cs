@@ -1,10 +1,11 @@
 ﻿using Edu_Station.Data;
 using Edu_Station.Models;
 using Edu_Station.Repositorio.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Edu_Station.Repositorio
 {
-    public class DiretorRepository : ICRUDRepository<Diretor>
+    public class DiretorRepository : ICRUDRepository<Diretor>, ILoginRepository<Diretor>
     {
         private readonly BancoContext _bancoContext;
 
@@ -13,28 +14,89 @@ namespace Edu_Station.Repositorio
             _bancoContext = bancoContext;
         }
 
-        public Task<Diretor> Adicionar(Diretor adicionar)
+        public async Task<Diretor> Adicionar(Diretor adicionar)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _bancoContext.Diretores.AddAsync(adicionar);
+                await _bancoContext.SaveChangesAsync();
+
+                return adicionar;
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("Erro ao adicionar o Diretor no banco");
+            }
+
         }
 
-        public Task<Diretor> Buscar(Guid id)
+        public async Task<Diretor> Buscar(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Diretor DiretorBanco = await _bancoContext.Diretores.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
+                return DiretorBanco is null ? DiretorBanco : throw new ArgumentNullException("Diretor não existe no Banco de Dados");
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro ao buscar o Diretor no banco");
+            }
         }
 
-        public Task Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Diretor DiretorBanco = await Buscar(id);
+                _bancoContext.Diretores.Remove(DiretorBanco);
+                await _bancoContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro ao buscar o Diretor no banco");
+            }
         }
 
-        public Task<Diretor> Editar(Diretor editar)
+        public async Task<Diretor> Editar(Diretor editar)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Diretor DiretorBanco = await Buscar(editar.Id);
+                _bancoContext.Diretores.Update(editar);
+                await _bancoContext.SaveChangesAsync();
+                return editar;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro ao buscar o Diretor no banco");
+            }
         }
 
-        public Task<List<Diretor>> GetAll()
+        public async Task<List<Diretor>> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _bancoContext.Diretores.ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro ao buscar os Diretors no banco");
+            }
+        }
+
+        public async Task<Diretor> Logar(Diretor login)
+        {
+            try
+            {
+                Diretor loginDb = await _bancoContext.Diretores.FirstOrDefaultAsync(x => x.CPF == login.CPF && x.Senha == login.Senha);
+                return loginDb is null ? throw new ArgumentNullException("Usuário não localizado") : loginDb;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro ao localizar o login");
+            }
         }
     }
+}

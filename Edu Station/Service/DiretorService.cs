@@ -2,10 +2,11 @@
 using Edu_Station.Models;
 using Edu_Station.Repositorio.Interfaces;
 using Edu_Station.Service.Interface;
+using Edu_Station.Service.Interfaces;
 
 namespace Edu_Station.Service.DiretorService
 {
-    public class TurmaService : ICRUDService<Turma>
+    public class TurmaService : ICRUDService<Turma>, ILoginService
     {
         private readonly ICRUDRepository<Turma> _repository;
 
@@ -23,7 +24,7 @@ namespace Edu_Station.Service.DiretorService
             throw new NotImplementedException();
         }
 
-        public Task Delete(Guid id)
+        public Task<bool> Delete(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -34,6 +35,11 @@ namespace Edu_Station.Service.DiretorService
         }
 
         public Task<List<Turma>> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Login> Logar(Login login)
         {
             throw new NotImplementedException();
         }

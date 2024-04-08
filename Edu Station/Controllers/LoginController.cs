@@ -1,14 +1,41 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Edu_Station.Models;
+using Edu_Station.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edu_Station.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly ICRUDService<Login> _service;
+        private readonly ILoginService _LoginService;
+
+        public LoginController(ICRUDService<Login> service, ILoginService loginService)
+        {
+            _service = service;
+            _LoginService = loginService;
+        }
+
         // GET: LoginController
         public ActionResult Index()
         {
             return View();
+        }
+        // POST: LoginController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Logar(Login logar)
+        {
+            try
+            {
+                Login loginService = await _LoginService.Logar(logar);
+                return RedirectToAction("Index", "Home");
+            }
+            catch(Exception erro)
+            {
+                TempData["MensagemErro"] = erro.Message;
+
+                return View(logar);
+            }
         }
 
         // GET: LoginController/Details/5

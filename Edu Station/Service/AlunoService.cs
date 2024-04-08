@@ -1,11 +1,10 @@
-﻿using Edu_Station.Data;
-using Edu_Station.Models;
+﻿using Edu_Station.Models;
 using Edu_Station.Repositorio.Interfaces;
-using Edu_Station.Service.Interface;
+using Edu_Station.Service.Interfaces;
 
 namespace Edu_Station.Service.AlunoService
 {
-    public class AlunoService : ICRUDService<Aluno>
+    public class AlunoService : ICRUDService<Aluno>, ILoginService
     {
         private readonly ICRUDRepository<Aluno> _repository;
 
@@ -24,7 +23,7 @@ namespace Edu_Station.Service.AlunoService
             throw new NotImplementedException();
         }
 
-        public Task Delete(Guid id)
+        public Task<bool> Delete(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -35,6 +34,11 @@ namespace Edu_Station.Service.AlunoService
         }
 
         public Task<List<Aluno>> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Login> Logar(Login login)
         {
             throw new NotImplementedException();
         }

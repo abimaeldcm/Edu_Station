@@ -6,7 +6,7 @@
         Task<T> Buscar(Guid id);
         Task<T> Adicionar(T adicionar);
         Task<T> Editar(T editar);
-        Task Delete(Guid id);
+        Task<bool> Delete(Guid id);
 
     }
 }

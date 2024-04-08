@@ -15,6 +15,8 @@ namespace Edu_Station.Data
         public DbSet<Disciplina> Disciplinas { get; set; } 
         public DbSet<Docente> Docentes { get; set; } 
         public DbSet<Turma> Turmas { get; set; } 
+        public DbSet<Diretor> Diretores { get; set; } 
+        public DbSet<Login> Logins { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

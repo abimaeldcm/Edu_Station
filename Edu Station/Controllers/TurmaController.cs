@@ -1,77 +1,79 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Edu_Station.Models;
+using Edu_Station.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edu_Station.Controllers
 {
     public class TurmaController : Controller
     {
-        // GET: TurmaController
-        public ActionResult Index()
+        private readonly ICRUDService<Turma> _service;
+
+        public TurmaController(ICRUDService<Turma> service)
+        {
+            _service = service;
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            var Turmas = await _service.GetAll();
+            return View(Turmas);
+        }
+
+        public async Task<ActionResult> Criar()
         {
             return View();
         }
 
-        // GET: TurmaController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: TurmaController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: TurmaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Criar(Turma CriarTurma)
         {
             try
             {
+                await _service.Adicionar(CriarTurma);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(CriarTurma);
             }
         }
 
-        // GET: TurmaController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Editar(Guid id)
         {
-            return View();
+            Turma TurmaDb = await _service.Buscar(id);
+
+            return View(TurmaDb);
         }
 
-        // POST: TurmaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Editar(Turma editarTurma)
         {
             try
             {
+                Turma TurmaDb = await _service.Editar(editarTurma);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(editarTurma);
             }
         }
 
-        // GET: TurmaController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Deletar(Guid id)
         {
-            return View();
+            Turma TurmaDb = await _service.Buscar(id);
+            return View(TurmaDb);
         }
 
-        // POST: TurmaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(Guid id)
         {
             try
             {
+                await _service.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

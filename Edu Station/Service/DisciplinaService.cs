@@ -1,7 +1,6 @@
-﻿using Edu_Station.Data;
-using Edu_Station.Models;
+﻿using Edu_Station.Models;
 using Edu_Station.Repositorio.Interfaces;
-using Edu_Station.Service.Interface;
+using Edu_Station.Service.Interfaces;
 
 namespace Edu_Station.Service.DisciplinaService
 
@@ -15,29 +14,29 @@ namespace Edu_Station.Service.DisciplinaService
             _repository = repository;
         }
 
-        public Task<Disciplina> Adicionar(Disciplina adicionar)
+        public async Task<Disciplina> Adicionar(Disciplina adicionar)
         {
-            throw new NotImplementedException();
+            return await _repository.Adicionar(adicionar);
         }
 
-        public Task<Disciplina> Buscar(Guid id)
+        public async Task<Disciplina> Buscar(Guid id)
         {
-            throw new NotImplementedException();
+            return await _repository.Buscar(id);
         }
 
-        public Task Delete(Guid id)
+        public Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            return _repository.Delete(id);
         }
 
-        public Task<Disciplina> Editar(Disciplina editar)
+        public async Task<Disciplina> Editar(Disciplina editar)
         {
-            throw new NotImplementedException();
+            return await _repository.Editar(editar);
         }
 
-        public Task<List<Disciplina>> GetAll()
+        public async Task<List<Disciplina>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _repository.GetAll();
         }
     }
 }

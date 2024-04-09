@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Edu_Station.Models.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace Edu_Station.Models
 {
@@ -10,6 +11,6 @@ namespace Edu_Station.Models
 
         [Required(ErrorMessage = "Digite a senha")]
         public string Senha { get; set; }
-        public int MyProperty { get; set; }
+        public EPerfil Perfil { get; set; }
     }
 }

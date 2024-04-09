@@ -9,6 +9,9 @@ namespace Edu_Station.Data.Mapping
         public void Configure(EntityTypeBuilder<Disciplina> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.HasOne(x => x.Docente)
+                .WithMany()
+                .HasForeignKey(x => x.IdDocente);
         }
     }
 }

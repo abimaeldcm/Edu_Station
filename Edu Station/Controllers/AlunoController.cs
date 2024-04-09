@@ -1,77 +1,92 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Edu_Station.Models;
+using Edu_Station.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Edu_Station.Controllers
 {
     public class AlunoController : Controller
     {
-        // GET: AlunoController
-        public ActionResult Index()
+        private readonly ICRUDService<Aluno> _service;
+        private readonly ICRUDService<Diretor> _diretorService;
+        private readonly ICRUDService<Docente> _docenteService;
+        private readonly ICRUDService<Turma> _turmaService;
+        private readonly ICRUDService<Disciplina> _disciplinaService;
+
+        public AlunoController(ICRUDService<Aluno> service, ICRUDService<Diretor> diretorService, ICRUDService<Docente> docenteService, ICRUDService<Turma> turmaService, ICRUDService<Disciplina> disciplinaService)
         {
+            _service = service;
+            _diretorService = diretorService;
+            _docenteService = docenteService;
+            _turmaService = turmaService;
+            _disciplinaService = disciplinaService;
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            var alunos = await _service.GetAll();
+            return View(alunos);
+        }
+
+        public async Task<ActionResult> Criar()
+        {
+            ViewBag.TurmaId = new SelectList((await _turmaService.GetAll()).OrderBy(s => s.Nome), "Id", "Nome");
             return View();
         }
 
-        // GET: AlunoController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: AlunoController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AlunoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Criar(Aluno CriarAluno)
         {
             try
             {
+                await _service.Adicionar(CriarAluno);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(CriarAluno);
             }
         }
 
-        // GET: AlunoController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Editar(Guid id)
         {
-            return View();
+            Aluno alunoDb = await _service.Buscar(id);
+            ViewBag.TurmaId = new SelectList((await _turmaService.GetAll()).OrderBy(s => s.Nome), "Id", "Nome");
+
+            return View(alunoDb);
         }
 
-        // POST: AlunoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Editar(Aluno editarAluno)
         {
             try
             {
+                Aluno alunoDb = await _service.Editar(editarAluno);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                ViewBag.TurmaId = new SelectList((await _turmaService.GetAll()).OrderBy(s => s.Nome), "Id", "Nome");
+                return View(editarAluno);
             }
         }
 
-        // GET: AlunoController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Deletar(Guid id)
         {
-            return View();
+            Aluno alunoDb = await _service.Buscar(id);
+            return View(alunoDb);
         }
 
-        // POST: AlunoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(Guid id)
         {
             try
             {
+                await _service.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

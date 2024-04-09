@@ -1,6 +1,6 @@
 ﻿using Edu_Station.Models;
 using Edu_Station.Repositorio.Interfaces;
-using Edu_Station.Service.Interface;
+using Edu_Station.Service.Interfaces;
 
 namespace Edu_Station.Service.TurmaService
 {
@@ -13,29 +13,29 @@ namespace Edu_Station.Service.TurmaService
         {
             _repository = repository;
         }
-        public Task<Turma> Adicionar(Turma adicionar)
+        public async Task<Turma> Adicionar(Turma adicionar)
         {
-            throw new NotImplementedException();
+            return await _repository.Adicionar(adicionar);
         }
 
-        public Task<Turma> Buscar(Guid id)
+        public async Task<Turma> Buscar(Guid id)
         {
-            throw new NotImplementedException();
+            return await _repository.Buscar(id);
         }
 
-        public Task Delete(Guid id)
+        public Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            return _repository.Delete(id);
         }
 
-        public Task<Turma> Editar(Turma editar)
+        public async Task<Turma> Editar(Turma editar)
         {
-            throw new NotImplementedException();
+            return await _repository.Editar(editar);
         }
 
-        public Task<List<Turma>> GetAll()
+        public async Task<List<Turma>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _repository.GetAll();
         }
     }
 }

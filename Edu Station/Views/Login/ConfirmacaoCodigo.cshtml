@@ -1,0 +1,50 @@
+﻿@{
+    Layout = null;
+}
+@if (TempData["MensagemSucessoEnvio"] != null)
+{
+    <div id="myAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @TempData["MensagemSucessoEnvio"]
+    </div>
+}
+
+@if (TempData["CodigoIncorreto"] != null)
+{
+    <div id="myAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @TempData["CodigoIncorreto"]
+    </div>
+}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Primeiro Login</title>
+    <link rel="stylesheet" href="~/css/Login/Login.css" />
+
+</head>
+
+
+
+<body style="margin:auto">
+    <div class="container">
+        <div class="left">
+            <div class="header">
+                <h2 class="animation a1">Confirmação de Código</h2>
+                <h4 class="animation a2">Digite o código que foi enviado para o seu e-mail</h4>
+            </div>
+            <form asp-controller="Login" asp-action="ConfirmacaoCodigo" method="post">
+                <div class="form">
+                    <input type="text" class="form-field animation a3" for="codigo" placeholder="Código">
+                    <button asp-controller="Login" asp-action="Logar" type="submit" class="animation a6">Entrar</button>
+                    <button asp-controller="Login" asp-action="PrimeiroLogin" class="animation a7">Voltar</button>
+
+                </div>
+            </form>
+        </div>
+        <div class="right"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+﻿<head>
+    <link rel="stylesheet" href="~/css/NavBar.css" asp-append-version="true" />
+</head>
+<body>
+    <nav id="navbar" style="z-index:1">
+        <ul class="navbar-items flexbox-col">
+            <br>
+            <li>
+                <a class="navbar-item-inner">
+                    <a class="navbar-item-inner-icon-wrapper flexbox" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="/images/educacao.png" alt="Edu Station" width="30" height="30">
+                    </a>
+                </a>
+            </li>
+            <br>
+            <li class="navbar-item flexbox-left">
+                <a class="navbar-item-inner flexbox-left" asp-area="" asp-controller="Home" asp-action="Index">
+                    <div class="navbar-item-inner-icon-wrapper flexbox">
+                        <ion-icon name="home-outline"></ion-icon>
+                    </div>
+                    <span class="link-text">Home</span>
+                </a>
+            </li>
+
+            <li class="navbar-item flexbox-left">
+                <a class="navbar-item-inner flexbox-left" asp-area="" asp-controller="Aluno" asp-action="Index">
+                    <div class="navbar-item-inner-icon-wrapper flexbox">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <span class="link-text">Alunos</span>
+                </a>
+            </li>
+            <li class="navbar-item flexbox-left">
+                <a class="navbar-item-inner flexbox-left" asp-area="" asp-controller="Docente" asp-action="Index">
+                    <div class="navbar-item-inner-icon-wrapper flexbox">
+                        <ion-icon name="school-outline"></ion-icon>
+                    </div>
+                    <span class="link-text">Docentes</span>
+                </a>
+            </li>
+            <li class="navbar-item flexbox-left">
+                <a class="navbar-item-inner flexbox-left" asp-area="" asp-controller="Diretor" asp-action="Index">
+                    <div class="navbar-item-inner-icon-wrapper flexbox">
+                        <ion-icon name="man-outline"></ion-icon>
+                    </div>
+                    <span class="link-text">Diretor</span>
+                </a>
+            </li>
+            <li class="navbar-item flexbox-left">
+                <a class="navbar-item-inner flexbox-left" asp-area="" asp-controller="Disciplina" asp-action="Index">
+                    <div class="navbar-item-inner-icon-wrapper flexbox">
+                        <ion-icon name="book-outline"></ion-icon>
+                    </div>
+                    <span class="link-text">Disciplinas</span>
+                </a>
+            </li>
+            <li class="navbar-item flexbox-left">
+                <a class="navbar-item-inner flexbox-left" asp-area="" asp-controller="Turma" asp-action="Index">
+                    <div class="navbar-item-inner-icon-wrapper flexbox">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </div>
+                    <span class="link-text">Turma</span>
+                </a>
+            </li>
+            
+            <li class="navbar-item flexbox-left">
+                <a class="navbar-item-inner flexbox-left" asp-area="" asp-controller="Home" asp-action="Sair">
+                    <div class="navbar-item-inner-icon-wrapper flexbox">
+                        <ion-icon name="arrow-back-circle-outline"></ion-icon>
+                    </div>
+                    <span class="link-text">Sair</span>
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+</body>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

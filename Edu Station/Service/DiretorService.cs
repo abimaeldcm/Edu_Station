@@ -1,47 +1,70 @@
 ﻿using Edu_Station.Data;
 using Edu_Station.Models;
+using Edu_Station.Models.Enum;
+using Edu_Station.Repositorio;
 using Edu_Station.Repositorio.Interfaces;
-using Edu_Station.Service.Interface;
 using Edu_Station.Service.Interfaces;
+using Edu_Station.SessaoUsuario;
 
 namespace Edu_Station.Service.DiretorService
 {
-    public class TurmaService : ICRUDService<Turma>, ILoginService
+    public class DiretorService : ICRUDService<Diretor>, ILoginService<Diretor, Login>
     {
-        private readonly ICRUDRepository<Turma> _repository;
+        private readonly ICRUDRepository<Diretor> _repository;
+        private readonly ILoginRepository<Diretor, Login> _loginRepository;
+        private readonly ISessao _sessao;
 
-        public TurmaService(ICRUDRepository<Turma> repository)
+        public DiretorService(ICRUDRepository<Diretor> repository, ILoginRepository<Diretor, Login> loginRepository, ISessao sessao)
         {
             _repository = repository;
-        }
-        public Task<Turma> Adicionar(Turma adicionar)
-        {
-            throw new NotImplementedException();
+            _loginRepository = loginRepository;
+            _sessao = sessao;
         }
 
-        public Task<Turma> Buscar(Guid id)
+        public async Task<Diretor> Adicionar(Diretor adicionar)
         {
-            throw new NotImplementedException();
+            adicionar.Senha = BCrypt.Net.BCrypt.HashPassword(adicionar.Senha);
+            return await _repository.Adicionar(adicionar);
+        }
+
+        public async Task<Diretor> Buscar(Guid id)
+        {
+            return await _repository.Buscar(id);
+        }
+
+        public async Task<Diretor> BuscarPorEmail(string email)
+        {
+            return await _loginRepository.BuscarPorEmail(email);
         }
 
         public Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            return _repository.Delete(id);
         }
 
-        public Task<Turma> Editar(Turma editar)
+        public async Task<Diretor> Editar(Diretor editar)
         {
-            throw new NotImplementedException();
+
+            editar.Senha = BCrypt.Net.BCrypt.HashPassword(editar.Senha);
+            return await _repository.Editar(editar);
         }
 
-        public Task<List<Turma>> GetAll()
+        public async Task<List<Diretor>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _repository.GetAll();
         }
 
-        public Task<Login> Logar(Login login)
+        public async Task<Diretor> Logar(Login login)
         {
-            throw new NotImplementedException();
+            Diretor DiretorRepository = await _loginRepository.Logar(login);
+            bool senhaValida = BCrypt.Net.BCrypt.Verify(login.Senha, DiretorRepository.Senha);
+            if (!senhaValida)
+            {
+                throw new Exception("Senha ou login incorretos");
+            }
+            _sessao.CriarSessaoDoUsuario(EPerfil.Docente);
+
+            return DiretorRepository;
         }
     }
 }

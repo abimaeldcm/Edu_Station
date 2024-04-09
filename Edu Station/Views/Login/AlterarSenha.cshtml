@@ -1,0 +1,59 @@
+﻿@{
+    Layout = null;
+}
+
+@if (TempData["MensagemEmailNaoEncontrado"] != null)
+{
+    <div id="myAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @TempData["MensagemEmailNaoEncontrado"]
+    </div>
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperação de Senha</title>
+    <link rel="stylesheet" href="~/css/Login/Login.css" />
+</head>
+<body style="margin:auto">
+
+    <div class="container">
+        <div class="left">
+            <div class="header">
+                <h2 class="animation a1">Alterar Senha</h2>
+                <h4 class="animation a2">Crie uma nova senha</h4>
+            </div>
+            <form asp-controller="Login" asp-action="AlterarSenha" method="post" onsubmit="return validatePasswords()">
+                <div class="form">
+                    <input type="password" class="form-field animation a3" id="NovaSenha" name="NovaSenha" placeholder="Nova Senha">
+                    <input type="password" class="form-field animation a3" id="ConfirmarNovaSenha" name="ConfirmarNovaSenha" placeholder="Confirmar Nova Senha">
+                    <span id="senhaMismatch" class="text-danger" style="display: none;">As senhas não correspondem.</span>
+
+                    <button type="submit" class="animation a6">Entrar</button>
+                    <button type="button" onclick="window.location.href='@Url.Action("Index", "Login")'" class="animation a7">Voltar</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>            
+<script>
+    function validatePasswords() {
+        var novaSenha = document.getElementById("NovaSenha").value;
+        var confirmarNovaSenha = document.getElementById("ConfirmarNovaSenha").value;
+        var senhaMismatch = document.getElementById("senhaMismatch");
+
+        if (novaSenha !== confirmarNovaSenha) {
+            senhaMismatch.style.display = "block"; // Exibe a mensagem de erro
+            return false;
+        }
+
+        senhaMismatch.style.display = "none"; // Esconde a mensagem de erro
+        return true;
+    }
+</script>

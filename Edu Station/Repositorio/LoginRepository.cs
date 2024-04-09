@@ -36,7 +36,7 @@ namespace Edu_Station.Repositorio
             try
             {
                 Login LoginBanco = await _bancoContext.Logins.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
-                return LoginBanco is null ? LoginBanco : throw new ArgumentNullException("Login não existe no Banco de Dados");
+                return LoginBanco is null ? throw new ArgumentNullException("Login não existe no Banco de Dados") : LoginBanco;
             }
             catch (Exception)
             {

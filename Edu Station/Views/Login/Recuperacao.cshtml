@@ -1,0 +1,37 @@
+﻿@model Pessoa
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Primeiro Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        Recuperação de Senha
+                    </div>
+                    <div class="card-body">
+                        <p class="text-center">Digite o e-mail que você informou em seu cadastro.</p>
+                        <p class="text-center">Iremos enviar uma senha de recuperação</p>
+                        <form asp-controller="Usuario" asp-action="AlterarSenha" method="post">
+                            <div class="form-group">
+                                <label for="email">E-mail</label>
+                                <input type="email" class="form-control" id="email" name="email" asp-for="Email" required data-val-required="Por favor, digite o seu e-mail" placeholder="Digite seu E-mail">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

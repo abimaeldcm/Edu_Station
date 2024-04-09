@@ -36,7 +36,7 @@ namespace Edu_Station.Repositorio
             try
             {
                 Disciplina DisciplinaBanco = await _bancoContext.Disciplinas.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
-                return DisciplinaBanco is null ? DisciplinaBanco : throw new ArgumentNullException("Disciplina não existe no Banco de Dados");
+                return DisciplinaBanco is null ?  throw new ArgumentNullException("Disciplina não existe no Banco de Dados") : DisciplinaBanco;
             }
             catch (Exception)
             {
@@ -44,13 +44,14 @@ namespace Edu_Station.Repositorio
             }
         }
 
-        public async Task Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
             try
             {
                 Disciplina DisciplinaBanco = await Buscar(id);
                 _bancoContext.Disciplinas.Remove(DisciplinaBanco);
                 await _bancoContext.SaveChangesAsync();
+                return true;
 
             }
             catch (Exception)

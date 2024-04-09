@@ -81,6 +81,10 @@ namespace Edu_Station.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Telefone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -96,84 +100,49 @@ namespace Edu_Station.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bd923fe1-3e73-4dda-ae5c-c27588ab08db"),
-                            CPF = "06445225447",
-                            DataNascimento = new DateTime(1999, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "josearimateia@mail.com",
-                            IdTurma = new Guid("c8788f6e-ffb6-4d1f-9ad5-3f4bb5838fb7"),
-                            NomeCompleto = "José de Arimateia",
-                            Telefone = "86995258775"
-                        },
-                        new
-                        {
-                            Id = new Guid("e3f72cbf-35ed-4f7e-8476-72ba3c3cc5e3"),
-                            CPF = "12345678901",
-                            DataNascimento = new DateTime(2000, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "mariasilva@mail.com",
-                            IdTurma = new Guid("c8788f6e-ffb6-4d1f-9ad5-3f4bb5838fb7"),
-                            NomeCompleto = "Maria da Silva",
-                            Telefone = "86991234567"
-                        },
-                        new
-                        {
-                            Id = new Guid("963c7e5d-2f0e-45ec-8d4e-1216f62627d7"),
-                            CPF = "98765432109",
-                            DataNascimento = new DateTime(1998, 10, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "joaosilva@mail.com",
-                            IdTurma = new Guid("c8788f6e-ffb6-4d1f-9ad5-3f4bb5838fb7"),
-                            NomeCompleto = "João da Silva",
-                            Telefone = "86997654321"
-                        },
-                        new
-                        {
-                            Id = new Guid("a3c750e3-3d79-4d3e-923e-2fcd52794c0c"),
-                            CPF = "45678912345",
-                            DataNascimento = new DateTime(2001, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "anasouza@mail.com",
-                            IdTurma = new Guid("c8788f6e-ffb6-4d1f-9ad5-3f4bb5838fb7"),
-                            NomeCompleto = "Ana Souza",
-                            Telefone = "86999887766"
-                        },
-                        new
-                        {
-                            Id = new Guid("e5b01b44-32b8-4c5d-8090-23c2d0a0c6cb"),
-                            CPF = "98765432198",
-                            DataNascimento = new DateTime(2002, 5, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "pedrooliveira@mail.com",
-                            IdTurma = new Guid("c8788f6e-ffb6-4d1f-9ad5-3f4bb5838fb7"),
-                            NomeCompleto = "Pedro Oliveira",
-                            Telefone = "86994433221"
-                        },
-                        new
-                        {
-                            Id = new Guid("94d7934e-3462-4b97-91c7-6a7d16d456ad"),
-                            CPF = "01234567890",
-                            DataNascimento = new DateTime(2003, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "carlasantos@mail.com",
-                            IdTurma = new Guid("c8788f6e-ffb6-4d1f-9ad5-3f4bb5838fb7"),
-                            NomeCompleto = "Carla Santos",
-                            Telefone = "86995544333"
-                        },
-                        new
-                        {
-                            Id = new Guid("fb03391d-6223-4a4c-87f6-ec131dbbd99d"),
-                            CPF = "10293847560",
-                            DataNascimento = new DateTime(2004, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "marianaoliveira@mail.com",
-                            IdTurma = new Guid("c8788f6e-ffb6-4d1f-9ad5-3f4bb5838fb7"),
-                            NomeCompleto = "Mariana Oliveira",
-                            Telefone = "86993322111"
-                        },
-                        new
-                        {
                             Id = new Guid("f12bc8d1-4e2b-4b7d-af42-b858bb362cf9"),
                             CPF = "09876543210",
                             DataNascimento = new DateTime(2005, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "fernandolima@mail.com",
                             IdTurma = new Guid("c8788f6e-ffb6-4d1f-9ad5-3f4bb5838fb7"),
                             NomeCompleto = "Fernando Lima",
+                            Senha = "123",
                             Telefone = "86996655443"
                         });
+                });
+
+            modelBuilder.Entity("Edu_Station.Models.Diretor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DataNascimento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NomeCompleto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Diretores");
                 });
 
             modelBuilder.Entity("Edu_Station.Models.Disciplina", b =>
@@ -185,7 +154,7 @@ namespace Edu_Station.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DocenteId")
+                    b.Property<Guid?>("DocenteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("IdDocente")
@@ -198,6 +167,8 @@ namespace Edu_Station.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DocenteId");
+
+                    b.HasIndex("IdDocente");
 
                     b.ToTable("Disciplinas");
                 });
@@ -224,6 +195,10 @@ namespace Edu_Station.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefone")
                         .IsRequired()
@@ -260,7 +235,7 @@ namespace Edu_Station.Migrations
                         {
                             Id = new Guid("c8788f6e-ffb6-4d1f-9ad5-3f4bb5838fb7"),
                             Ano = "2024",
-                            DataCriacao = new DateTime(2024, 4, 7, 2, 55, 49, 873, DateTimeKind.Local).AddTicks(5686),
+                            DataCriacao = new DateTime(2024, 4, 9, 1, 45, 29, 312, DateTimeKind.Local).AddTicks(2753),
                             Nome = "1A"
                         });
                 });
@@ -312,9 +287,13 @@ namespace Edu_Station.Migrations
 
             modelBuilder.Entity("Edu_Station.Models.Disciplina", b =>
                 {
-                    b.HasOne("Edu_Station.Models.Docente", "Docente")
+                    b.HasOne("Edu_Station.Models.Docente", null)
                         .WithMany("Disciplinas")
-                        .HasForeignKey("DocenteId")
+                        .HasForeignKey("DocenteId");
+
+                    b.HasOne("Edu_Station.Models.Docente", "Docente")
+                        .WithMany()
+                        .HasForeignKey("IdDocente")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

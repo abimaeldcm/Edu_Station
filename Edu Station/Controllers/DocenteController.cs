@@ -1,77 +1,86 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Edu_Station.Models;
+using Edu_Station.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edu_Station.Controllers
 {
     public class DocenteController : Controller
     {
-        // GET: DocenteController
-        public ActionResult Index()
+        private readonly ICRUDService<Docente> _service;
+        private readonly ICRUDService<Docente> _docenteService;
+        private readonly ICRUDService<Turma> _turmaService;
+        private readonly ICRUDService<Disciplina> _disciplinaService;
+
+        public DocenteController(ICRUDService<Docente> service, ICRUDService<Docente> docenteService, ICRUDService<Turma> turmaService, ICRUDService<Disciplina> disciplinaService)
+        {
+            _service = service;
+            _docenteService = docenteService;
+            _turmaService = turmaService;
+            _disciplinaService = disciplinaService;
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            var Docentes = await _service.GetAll();
+            return View(Docentes);
+        }
+
+        public async Task<ActionResult> Criar()
         {
             return View();
         }
 
-        // GET: DocenteController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: DocenteController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: DocenteController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Criar(Docente CriarDocente)
         {
             try
             {
+                await _service.Adicionar(CriarDocente);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(CriarDocente);
             }
         }
 
-        // GET: DocenteController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Editar(Guid id)
         {
-            return View();
+            Docente DocenteDb = await _service.Buscar(id);
+
+            return View(DocenteDb);
         }
 
-        // POST: DocenteController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Editar(Docente editarDocente)
         {
             try
             {
+                Docente DocenteDb = await _service.Editar(editarDocente);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(editarDocente);
             }
         }
 
-        // GET: DocenteController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Deletar(Guid id)
         {
-            return View();
+            Docente DocenteDb = await _service.Buscar(id);
+            return View(DocenteDb);
         }
 
-        // POST: DocenteController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(Guid id)
         {
             try
             {
+                await _service.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -1,9 +1,8 @@
-﻿using Edu_Station.Models;
-
-namespace Edu_Station.Service.Interfaces
+﻿namespace Edu_Station.Service.Interfaces
 {
-    public interface ILoginService
+    public interface ILoginService<T, U> where T : class where U : class
     {
-        Task<Login> Logar(Login login);
+        Task<T> Logar(U login);
+        Task<T> BuscarPorEmail(string email);
     }
 }

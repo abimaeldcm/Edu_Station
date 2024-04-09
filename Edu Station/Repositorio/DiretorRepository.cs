@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Edu_Station.Repositorio
 {
-    public class DiretorRepository : ICRUDRepository<Diretor>, ILoginRepository<Diretor>
+    public class DiretorRepository : ICRUDRepository<Diretor>, ILoginRepository<Diretor, Login>
     {
         private readonly BancoContext _bancoContext;
 
@@ -36,11 +36,24 @@ namespace Edu_Station.Repositorio
             try
             {
                 Diretor DiretorBanco = await _bancoContext.Diretores.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
-                return DiretorBanco is null ? DiretorBanco : throw new ArgumentNullException("Diretor não existe no Banco de Dados");
+                return DiretorBanco is null ? throw new ArgumentNullException("Diretor não existe no Banco de Dados") : DiretorBanco;
             }
             catch (Exception)
             {
                 throw new Exception("Erro ao buscar o Diretor no banco");
+            }
+        }
+
+        public async Task<Diretor> BuscarPorEmail(string email)
+        {
+            try
+            {
+                Diretor alunoBanco = await _bancoContext.Diretores.FirstOrDefaultAsync(x => x.Email == email);
+                return alunoBanco is null ?  throw new ArgumentNullException("Diretor não existe no Banco de Dados") : alunoBanco;
+            }
+            catch (Exception msg)
+            {
+                throw new Exception(msg.Message);
             }
         }
 
@@ -86,16 +99,16 @@ namespace Edu_Station.Repositorio
             }
         }
 
-        public async Task<Diretor> Logar(Diretor login)
+        public async Task<Diretor> Logar(Login login)
         {
             try
             {
-                Diretor loginDb = await _bancoContext.Diretores.FirstOrDefaultAsync(x => x.CPF == login.CPF && x.Senha == login.Senha);
-                return loginDb is null ? throw new ArgumentNullException("Usuário não localizado") : loginDb;
+                Diretor loginDb = await _bancoContext.Diretores.FirstOrDefaultAsync(x => x.CPF == login.User);
+                return loginDb is null ? throw new ArgumentNullException("Diretor não existe no Banco de Dados") : loginDb;
             }
-            catch (Exception)
+            catch (Exception mensagem)
             {
-                throw new Exception("Erro ao localizar o login");
+                throw new Exception(mensagem.Message);
             }
         }
     }

@@ -2,8 +2,8 @@
 {
     public enum EPerfil : int
     {
-        Diretor = 0,
-        Docente = 1,
-        Aluno = 2,
+        Diretor = 1,
+        Docente = 2,
+        Aluno = 3,
     }
 }

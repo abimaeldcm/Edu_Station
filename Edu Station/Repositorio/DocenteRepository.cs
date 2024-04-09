@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Edu_Station.Repositorio
 {
-    public class DocenteRepostory : ICRUDRepository<Docente>, ILoginRepository<Docente>
+    public class DocenteRepository : ICRUDRepository<Docente>, ILoginRepository<Docente, Login>
     {
         private readonly BancoContext _bancoContext;
 
-        public DocenteRepostory(BancoContext bancoContext)
+        public DocenteRepository(BancoContext bancoContext)
         {
             _bancoContext = bancoContext;
         }
@@ -36,12 +36,17 @@ namespace Edu_Station.Repositorio
             try
             {
                 Docente DocenteBanco = await _bancoContext.Docentes.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
-                return DocenteBanco is null ? DocenteBanco : throw new ArgumentNullException("Docente não existe no Banco de Dados");
+                return DocenteBanco is null ?  throw new ArgumentNullException("Docente não existe no Banco de Dados") : DocenteBanco;
             }
             catch (Exception)
             {
                 throw new Exception("Erro ao buscar o Docente no banco");
             }
+        }
+
+        public Task<Docente> BuscarPorEmail(string email)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<bool> Delete(Guid id)
@@ -86,12 +91,12 @@ namespace Edu_Station.Repositorio
             }
         }
 
-        public async Task<Docente> Logar(Docente login)
+        public async Task<Docente> Logar(Login login)
         {
             try
             {
-                Docente loginDb = await _bancoContext.Docentes.FirstOrDefaultAsync(x => x.CPF == login.CPF && x.Senha == login.Senha);
-                return loginDb is null ? throw new ArgumentNullException("Usuário não localizado") : loginDb;
+                Docente loginDb = await _bancoContext.Docentes.FirstOrDefaultAsync(x => x.CPF == login.User && x.Senha == login.Senha);
+                return loginDb is null ? throw new ArgumentNullException("Docente não existe no Banco de Dados") : loginDb;
             }
             catch (Exception)
             {

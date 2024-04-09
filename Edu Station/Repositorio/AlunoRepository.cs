@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Edu_Station.Repositorio
 {
-    public class AlunoRepository : ICRUDRepository<Aluno>, ILoginRepository<Aluno>
+    public class AlunoRepository : ICRUDRepository<Aluno>, ILoginRepository<Aluno, Login>
     {
         private readonly BancoContext _bancoContext;
 
@@ -36,11 +36,24 @@ namespace Edu_Station.Repositorio
             try
             {
                 Aluno alunoBanco = await _bancoContext.Alunos.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
-                return alunoBanco is null ? alunoBanco : throw new ArgumentNullException("Aluno não existe no Banco de Dados");
+                return alunoBanco is null ? throw new ArgumentNullException("Aluno não existe no Banco de Dados") : alunoBanco;
             }
             catch (Exception)
             {
                 throw new Exception("Erro ao buscar o Aluno no banco");
+            }
+        }
+
+        public async Task<Aluno> BuscarPorEmail(string email)
+        {
+            try
+            {
+                Aluno alunoBanco = await _bancoContext.Alunos.FirstOrDefaultAsync(x => x.Email == email);
+                return alunoBanco is null ? throw new ArgumentNullException("Aluno não existe no Banco de Dados") : alunoBanco;
+            }
+            catch (Exception msg)
+            {
+                throw new Exception(msg.Message);
             }
         }
 
@@ -87,12 +100,12 @@ namespace Edu_Station.Repositorio
             }
         }
 
-        public async Task<Aluno> Logar(Aluno login)
+        public async Task<Aluno> Logar(Login login)
         {
             try
             {
-                Aluno loginDb = await _bancoContext.Alunos.FirstOrDefaultAsync(x => x.CPF == login.CPF && x.Senha == login.Senha);
-                return loginDb is null ? throw new ArgumentNullException("Usuário não localizado") : loginDb;
+                Aluno loginDb = await _bancoContext.Alunos.FirstOrDefaultAsync(x => x.CPF == login.User);
+                return loginDb is null ? throw new ArgumentNullException("Aluno não existe no Banco de Dados") : loginDb;
             }
             catch (Exception)
             {

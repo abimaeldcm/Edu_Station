@@ -6,16 +6,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace Edu_Station.Service.LoginService
 {
-    public class LoginService : ICRUDService<Login>, ILoginService
+    public class LoginService : ICRUDService<Login>
     {
         private readonly ICRUDRepository<Login> _repository;
-        private readonly ILoginRepository _LoginRepository;
         private readonly ISessao _sessao;
 
-        public LoginService(ICRUDRepository<Login> repository, ILoginRepository loginRepository, ISessao sessao)
+        public LoginService(ICRUDRepository<Login> repository,  ISessao sessao)
         {
             _repository = repository;
-            _LoginRepository = loginRepository;
             _sessao = sessao;
         }
 
@@ -42,19 +40,6 @@ namespace Edu_Station.Service.LoginService
         public async Task<List<Login>> GetAll()
         {
             return await _repository.GetAll();
-        }
-
-        public async Task<Login> Logar(Login login)
-        {
-            Login alunoRepositorio = await _LoginRepository.Logar(login);
-            var SenhaCorresponde = BCrypt.Net.BCrypt.Verify(login.Senha, alunoRepositorio.Senha);
-            if (SenhaCorresponde is false)
-            {
-                throw new Exception("Login ou senha inválidos");
-            }
-            _sessao.CriarSessaoDoUsuario(login);
-
-            return alunoRepositorio;
         }
     }
 }

@@ -4,6 +4,5 @@
     {
         Task<T> Logar(U login);
         Task<T> BuscarPorEmail(string email);
-
     }
 }

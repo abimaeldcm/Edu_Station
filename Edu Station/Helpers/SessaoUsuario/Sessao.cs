@@ -12,23 +12,33 @@ namespace Edu_Station.SessaoUsuario
             _httpContext = httpContext;
         }
 
-        public void CriarSessaoDoUsuario(Enum usuario)
+        public Task CriarSessaoDoUsuario(Pessoa usuario)
         {
-            string valor = JsonConvert.SerializeObject(usuario); //Tenho que passar omeu obj usuario como string semperder as informações. Então ésó tranformar em um json.
-            _httpContext.HttpContext.Session.SetString("sessaoUsuarioLogado", valor);
-        }
-        public Enum BuscarSessaoDoUsuario()
-        {
-            //Em criarsessao foi trasformado em json. Aqui vamos montar o obj novamente.
-            string sessaoUsuario = _httpContext.HttpContext.Session.GetString("sessaoUsuarioLogado");
-            if (string.IsNullOrEmpty(sessaoUsuario)) return null;
-            return JsonConvert.DeserializeObject<Enum>(sessaoUsuario);
+            if (usuario == null)
+            {
+                throw new ArgumentNullException(nameof(usuario));
+            }
 
+            string valor = JsonConvert.SerializeObject(usuario);
+            _httpContext.HttpContext.Session.SetString("sessaoUsuario", valor);
+
+            return Task.CompletedTask;
         }
-        public void RemoverSessaoUsuario()
+
+        public async Task<Pessoa> BuscarSessaoDoUsuario()
         {
-            //Agora vamos finalizar a nossa sessao
-            _httpContext.HttpContext.Session.Remove("sessaoUsuarioLogado");
+            string sessaoUsuario = _httpContext.HttpContext.Session.GetString("sessaoUsuario");
+            if (string.IsNullOrEmpty(sessaoUsuario))
+            {
+                return null;
+            }
+            return await Task.FromResult(JsonConvert.DeserializeObject<Pessoa>(sessaoUsuario));
+        }
+
+        public Task RemoverSessaoUsuario()
+        {
+            _httpContext.HttpContext.Session.Remove("sessaoUsuario");
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Edu_Station.Data;
 using Edu_Station.Models;
 using Edu_Station.Repositorio.Interfaces;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 
 namespace Edu_Station.Repositorio
@@ -29,7 +30,7 @@ namespace Edu_Station.Repositorio
                 throw new Exception("Erro ao adicionar o Aluno no banco");
             }
 
-        }
+        }        
 
         public async Task<Aluno> Buscar(Guid id)
         {
@@ -77,7 +78,7 @@ namespace Edu_Station.Repositorio
         {
             try
             {
-                Aluno alunoBanco = await Buscar(editar.Id);
+                Aluno alunoBanco = await Buscar(editar.Id);                
                 _bancoContext.Alunos.Update(editar);
                 await _bancoContext.SaveChangesAsync();
                 return editar;
@@ -92,7 +93,10 @@ namespace Edu_Station.Repositorio
         {
             try
             {
-                return await _bancoContext.Alunos.ToListAsync();
+                return await _bancoContext.Alunos
+                    .Include(x => x.Discipinas)
+                    .Include(x => x.Turma)
+                    .ToListAsync();
             }
             catch (Exception)
             {

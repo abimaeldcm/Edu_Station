@@ -4,8 +4,8 @@ namespace Edu_Station.SessaoUsuario
 {
     public interface ISessao
     {
-        void CriarSessaoDoUsuario(Enum usuario);
-        void RemoverSessaoUsuario();
-        Enum BuscarSessaoDoUsuario();
+        Task CriarSessaoDoUsuario(Pessoa usuario);
+        Task RemoverSessaoUsuario();
+        Task<Pessoa> BuscarSessaoDoUsuario();
     }
 }

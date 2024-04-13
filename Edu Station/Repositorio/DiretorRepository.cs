@@ -31,6 +31,11 @@ namespace Edu_Station.Repositorio
 
         }
 
+        public Task AlterarSenha(Diretor pessoa, string novaSenha)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Diretor> Buscar(Guid id)
         {
             try

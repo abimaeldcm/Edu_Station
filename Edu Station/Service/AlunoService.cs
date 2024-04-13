@@ -27,6 +27,12 @@ namespace Edu_Station.Service.AlunoService
             return await _repository.Adicionar(adicionar);
         }
 
+        public async Task AlterarSenha(Aluno pessoa, string novaSenha)
+        {
+            pessoa.Senha = novaSenha;
+            await _repository.Editar(pessoa);
+        }
+
         public async Task<Aluno> Buscar(Guid id)
         {
             return await _repository.Buscar(id);
@@ -61,7 +67,7 @@ namespace Edu_Station.Service.AlunoService
             {
                 throw new Exception("Senha ou login incorretos");
             }
-            _sessao.CriarSessaoDoUsuario(EPerfil.Docente);
+            await _sessao.CriarSessaoDoUsuario((Pessoa)alunoRepository);
 
 
             return alunoRepository;

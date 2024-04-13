@@ -4,5 +4,6 @@
     {
         Task<T> Logar(U login);
         Task<T> BuscarPorEmail(string email);
+        Task AlterarSenha(T pessoa, string novaSenha);
     }
 }

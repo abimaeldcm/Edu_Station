@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Edu_Station.Models.Enum;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Edu_Station.Models
@@ -12,6 +13,7 @@ namespace Edu_Station.Models
         public string NomeCompleto { get; set; }
         [Required]
         public string CPF { get; set; }
+        public EPerfil Perfil { get; set; }
         [Required]
         public string Senha { get; set; }
         [Required]

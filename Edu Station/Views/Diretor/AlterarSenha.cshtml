@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @{
+        ViewData["Title"] = "Aletar senha Aluno";
+    }
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,700,0,200" />
+    <link rel="stylesheet" href="~/css/PagEditCreate.css">
+</head>
+<body class="bodyy">
+    <div class="registration-form">
+        <form asp-controller="Login" asp-action="AlterarSenha" method="post">
+            <div class="form-icon">
+                <span class="material-symbols-outlined">
+                    stethoscope
+                </span>
+            </div>
+            <div class="form-group">
+                <input type="text" for="AntigaSenha" class="form-control item" placeholder="AntigaSenha" required>
+            </div>
+            <div class="form-group">
+                <input type="text" for="novaSenha" class="form-control item" placeholder="novaSenha" required>
+                <span for="novaSenha" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="text" for="confirmarSenha" class="form-control item" placeholder="confirmarSenha" required>
+                <span for="confirmarSenha" class="text-danger"></span>
+            </div>
+
+            <div style=" display: flex; justify-content: center;">
+                <div class="form-group">
+                    <button type="submit" value="AlterarSenha" class="btn btn-block create-account">Alterar</button>
+                    <a asp-action="Editar" class="btn btn-block create-account">Voltar</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

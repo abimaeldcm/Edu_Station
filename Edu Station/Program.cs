@@ -47,13 +47,17 @@ builder.Services.AddScoped<ICRUDRepository<Turma>, TurmaRepository>();
 builder.Services.AddScoped<ICRUDRepository<Login>, LoginRepository>();
 
 
-builder.Services.AddScoped<ISessao, Sessao>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IVerficadorCodigo, VerificadorCodigo>();
 
-
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+builder.Services.AddScoped<ISessao, Sessao>();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".EduStationCookie";
+    options.IdleTimeout = TimeSpan.FromSeconds(1000);
+    options.Cookie.IsEssential = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -70,9 +74,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Index}");
 
 app.Run();

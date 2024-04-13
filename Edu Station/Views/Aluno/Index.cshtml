@@ -115,8 +115,11 @@
                                                                                     <td>
                                                                                         <div class="d-flex flex-column">
 
-                                                                                            <span class="heading d-block">Hospital</span>
-                                                                                            <span class="subheadings">Clínica Médica</span>
+                                                                                            <span class="heading d-block">Disciplinas Matriculado</span>
+                                                                                            @foreach (var pessoa in item.Discipinas)
+                                                                                            {
+                                                                                                <span class="subheadings">@pessoa.Nome</span>
+                                                                                            }
                                                                                         </div>
                                                                                     </td>
                                                                                     <td>

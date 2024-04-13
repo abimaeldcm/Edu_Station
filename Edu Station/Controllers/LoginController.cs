@@ -2,6 +2,7 @@
 using Edu_Station.Models;
 using Edu_Station.Models.Enum;
 using Edu_Station.Service.Interfaces;
+using Edu_Station.SessaoUsuario;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -21,30 +22,21 @@ namespace Edu_Station.Controllers
         private readonly IEmailService _emailService;
         private readonly IVerficadorCodigo _VerificadorDeCodigoService;
 
-        public LoginController(ICRUDService<Login> service,
-                                ILoginService<Diretor, Login> loginDiretorService,
-                                ILoginService<Docente, Login> loginDocenteService,
-                                ILoginService<Aluno, Login> loginAlunoService,
-                                ICRUDService<Diretor> diretorAlunoService,
-                                ICRUDService<Docente> docenteService,
-                                ICRUDService<Aluno> alunoService,
-                                IEmailService emailService,
-                                IVerficadorCodigo verificadorDeCodigoService)
+        private readonly ISessao _sessao;
+
+        public LoginController(ICRUDService<Login> service, ILoginService<Diretor, Login> loginDiretorService, ILoginService<Docente, Login> loginDocenteService, ILoginService<Aluno, Login> loginAlunoService, ICRUDService<Diretor> diretorService, ICRUDService<Docente> docenteService, ICRUDService<Aluno> alunoService, IEmailService emailService, IVerficadorCodigo verificadorDeCodigoService, ISessao sessao)
         {
             _service = service;
             _LoginDiretorService = loginDiretorService;
             _LoginDocenteService = loginDocenteService;
             _LoginAlunoService = loginAlunoService;
-            _diretorService = diretorAlunoService;
+            _diretorService = diretorService;
             _docenteService = docenteService;
             _alunoService = alunoService;
             _emailService = emailService;
             _VerificadorDeCodigoService = verificadorDeCodigoService;
+            _sessao = sessao;
         }
-
-
-
-
         // GET: LoginController
         public ActionResult Index()
         {
@@ -80,6 +72,47 @@ namespace Edu_Station.Controllers
                 ViewBag.PerfilId = new SelectList(Enum.GetValues(typeof(EPerfil)));
 
                 return View("Index", logar);
+            }
+        }
+        [HttpGet]
+        public IActionResult AlterarSenha()
+        {
+            return View("AlterarSenhaLogado");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AlterarSenhaLogado(string AntigaSenha, string confirmarSenha, string novaSenha)
+        {
+            try
+            {
+                Pessoa pessoaSessao = await _sessao.BuscarSessaoDoUsuario();
+
+                bool senhaValida = BCrypt.Net.BCrypt.Verify(AntigaSenha, pessoaSessao.Senha);
+                if (senhaValida is not true)
+                {
+                    throw new Exception("A Senha do usuário");
+                }
+
+                switch (pessoaSessao.Perfil)
+                {
+                    case EPerfil.Diretor:
+                        await _LoginDiretorService.AlterarSenha((Diretor)pessoaSessao,novaSenha);
+                        return RedirectToAction("Index", "Diretor");
+                    case EPerfil.Docente:
+                        await _LoginDocenteService.AlterarSenha((Docente)pessoaSessao, novaSenha);
+                        return RedirectToAction("Index", "Docente");
+                    case EPerfil.Aluno:
+                        await _LoginAlunoService.AlterarSenha((Aluno)pessoaSessao, novaSenha);
+                        return RedirectToAction("Index", "Aluno");
+                    default:
+                        throw new Exception("Perfil de usuário inválida");
+                }
+            }
+            catch (Exception erro)
+            {
+                TempData["MensagemErro"] = erro.Message;
+                ViewBag.PerfilId = new SelectList(Enum.GetValues(typeof(EPerfil)));
+
+                return View("AlterarSenha", (AntigaSenha, novaSenha, confirmarSenha));
             }
         }
         public IActionResult EsqueciSenha()
@@ -153,11 +186,6 @@ namespace Edu_Station.Controllers
             return View();
         }
 
-        public IActionResult AlterarSenha()
-        {
-
-            return View();
-        }
         [HttpPost]
         public async Task<IActionResult> AlterarSenha(string NovaSenha, string ConfirmarNovaSenha)
         {

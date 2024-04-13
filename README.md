@@ -4,7 +4,7 @@ Edu Station é um sistema de gerenciamento escolar construído na arquitetura MV
 
 O sistema permite realizar operações CRUD (Create, Read, Update, Delete) para docentes, alunos, turmas, diretores e disciplinas.
 
-[![Vídeo de Demonstração](https://img.youtube.com/vi/qJJ7VMYLBkg/maxresdefault.jpg)](https://youtu.be/qJJ7VMYLBkg)
+[![Vídeo de Demonstração]](https://youtu.be/qJJ7VMYLBkg)
 
 ## Recursos
 

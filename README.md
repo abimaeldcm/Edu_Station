@@ -35,6 +35,7 @@ O sistema permite realizar operações CRUD (Create, Read, Update, Delete) para 
   },
   ...
 }
+```
 
 # Documentação do Projeto Edu_Station
 

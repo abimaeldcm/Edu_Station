@@ -11,6 +11,7 @@ namespace Edu_Station.Controllers
 {
     public class LoginController : Controller
     {
+        // Declaração de serviços e dependências necessárias
         private readonly ICRUDService<Login> _service;
         private readonly ILoginService<Diretor, Login> _LoginDiretorService;
         private readonly ILoginService<Docente, Login> _LoginDocenteService;
@@ -18,12 +19,11 @@ namespace Edu_Station.Controllers
         private readonly ICRUDService<Diretor> _diretorService;
         private readonly ICRUDService<Docente> _docenteService;
         private readonly ICRUDService<Aluno> _alunoService;
-
         private readonly IEmailService _emailService;
         private readonly IVerficadorCodigo _VerificadorDeCodigoService;
-
         private readonly ISessao _sessao;
 
+        // Construtor que injeta as dependências necessárias
         public LoginController(ICRUDService<Login> service, ILoginService<Diretor, Login> loginDiretorService, ILoginService<Docente, Login> loginDocenteService, ILoginService<Aluno, Login> loginAlunoService, ICRUDService<Diretor> diretorService, ICRUDService<Docente> docenteService, ICRUDService<Aluno> alunoService, IEmailService emailService, IVerficadorCodigo verificadorDeCodigoService, ISessao sessao)
         {
             _service = service;
@@ -37,19 +37,23 @@ namespace Edu_Station.Controllers
             _VerificadorDeCodigoService = verificadorDeCodigoService;
             _sessao = sessao;
         }
-        // GET: LoginController
+
+        // GET: LoginController/Index
         public ActionResult Index()
         {
+            // Prepara a lista de perfis para exibição no formulário de login
             ViewBag.PerfilId = new SelectList(Enum.GetValues(typeof(EPerfil)));
             return View();
         }
-        // POST: LoginController/Create
+
+        // POST: LoginController/Logar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Logar(Login logar)
         {
             try
             {
+                // Verifica o perfil do usuário e redireciona para a página inicial apropriada
                 switch (logar.Perfil)
                 {
                     case EPerfil.Diretor:
@@ -68,34 +72,42 @@ namespace Edu_Station.Controllers
             }
             catch (Exception erro)
             {
+                // Em caso de erro, exibe a mensagem de erro e recarrega a página de login
                 TempData["MensagemErro"] = erro.Message;
                 ViewBag.PerfilId = new SelectList(Enum.GetValues(typeof(EPerfil)));
-
                 return View("Index", logar);
             }
         }
+
+        // GET: LoginController/AlterarSenha
         [HttpGet]
         public IActionResult AlterarSenha()
         {
+            // Retorna a visualização para alterar a senha do usuário logado
             return View("AlterarSenhaLogado");
         }
+
+        // POST: LoginController/AlterarSenhaLogado
         [HttpPost]
         public async Task<IActionResult> AlterarSenhaLogado(string AntigaSenha, string confirmarSenha, string novaSenha)
         {
             try
             {
+                // Obtém os detalhes do usuário da sessão
                 Pessoa pessoaSessao = await _sessao.BuscarSessaoDoUsuario();
 
+                // Verifica se a senha antiga fornecida corresponde à senha atual do usuário
                 bool senhaValida = BCrypt.Net.BCrypt.Verify(AntigaSenha, pessoaSessao.Senha);
-                if (senhaValida is not true)
+                if (!senhaValida)
                 {
-                    throw new Exception("A Senha do usuário");
+                    throw new Exception("A senha do usuário está incorreta.");
                 }
 
+                // Altera a senha do usuário logado com base no perfil
                 switch (pessoaSessao.Perfil)
                 {
                     case EPerfil.Diretor:
-                        await _LoginDiretorService.AlterarSenha((Diretor)pessoaSessao,novaSenha);
+                        await _LoginDiretorService.AlterarSenha((Diretor)pessoaSessao, novaSenha);
                         return RedirectToAction("Index", "Diretor");
                     case EPerfil.Docente:
                         await _LoginDocenteService.AlterarSenha((Docente)pessoaSessao, novaSenha);
@@ -104,34 +116,33 @@ namespace Edu_Station.Controllers
                         await _LoginAlunoService.AlterarSenha((Aluno)pessoaSessao, novaSenha);
                         return RedirectToAction("Index", "Aluno");
                     default:
-                        throw new Exception("Perfil de usuário inválida");
+                        throw new Exception("Perfil de usuário inválido");
                 }
             }
             catch (Exception erro)
             {
+                // Em caso de erro, exibe a mensagem de erro e recarrega a página de alteração de senha
                 TempData["MensagemErro"] = erro.Message;
                 ViewBag.PerfilId = new SelectList(Enum.GetValues(typeof(EPerfil)));
-
                 return View("AlterarSenha", (AntigaSenha, novaSenha, confirmarSenha));
             }
         }
+
+        // GET: LoginController/EsqueciSenha
         public IActionResult EsqueciSenha()
         {
+            // Retorna a visualização para redefinir a senha esquecida
             ViewBag.PerfilId = new SelectList(Enum.GetValues(typeof(EPerfil)));
             return View("PrimeiroLogin");
         }
 
-        public IActionResult PrimeiroLogin()
-        {
-            ViewBag.PerfilId = new SelectList(Enum.GetValues(typeof(EPerfil)));
-            return View("PrimeiroLogin");
-
-        }
+        // POST: LoginController/PrimeiroLogin
         [HttpPost]
         public async Task<IActionResult> PrimeiroLogin(int perfil, string email)
         {
             try
             {
+                // Verifica o perfil do usuário e envia um código de recuperação para o e-mail
                 EPerfil perfilUsuario = (EPerfil)perfil;
                 switch (perfilUsuario)
                 {
@@ -151,7 +162,7 @@ namespace Edu_Station.Controllers
 
                 await _emailService.SendEmailAsync(email,
                     "Código de Recuperação",
-                $"Seu código de recuperação é: {codigo} \n Código válido por 10 minutos.");
+                    $"Seu código de recuperação é: {codigo} \n Código válido por 10 minutos.");
 
                 await _VerificadorDeCodigoService.GuardarEmailCache(email);
 
@@ -160,20 +171,24 @@ namespace Edu_Station.Controllers
             }
             catch (Exception)
             {
+                // Em caso de erro, exibe a mensagem de erro e recarrega a página de redefinição de senha
                 TempData["MensagemEmailNaoEncontrado"] = "Não encontramos o e-mail informado. Verifique as informações ou entre em contato com o seu administrador.";
                 return View("PrimeiroLogin");
             }
-
         }
 
-
+        // GET: LoginController/ConfirmacaoCodigo
         public IActionResult ConfirmacaoCodigo()
         {
+            // Retorna a visualização para confirmar o código de recuperação
             return View();
         }
+
+        // POST: LoginController/ConfirmacaoCodigoAsync
         [HttpPost]
         public async Task<IActionResult> ConfirmacaoCodigoAsync(string codigo)
         {
+            // Valida o código de recuperação e redireciona para a página de alteração de senha
             var codigoIgual = await _VerificadorDeCodigoService.ValidarCodigoEnviado(codigo);
 
             if (codigoIgual)
@@ -186,127 +201,58 @@ namespace Edu_Station.Controllers
             return View();
         }
 
+        // POST: LoginController/AlterarSenha
         [HttpPost]
         public async Task<IActionResult> AlterarSenha(string NovaSenha, string ConfirmarNovaSenha)
         {
             try
             {
+                // Verifica se as senhas fornecidas correspondem
                 if (NovaSenha != ConfirmarNovaSenha)
                 {
                     ModelState.AddModelError("ConfirmarNovaSenha", "As senhas não correspondem.");
                     return View();
                 }
 
+                // Recupera o e-mail e o perfil do usuário da sessão
                 var email = await _VerificadorDeCodigoService.RecuperarEmailCache();
                 var perfilUsuario = await _VerificadorDeCodigoService.RecuperarPerfilCache();
 
-                if (email is null || perfilUsuario is 0)
+                if (email == null || perfilUsuario == 0)
                 {
-                    //colocar a excessão aqui
-                    return View();
+                    throw new Exception("Falha ao recuperar o e-mail ou perfil do usuário.");
                 }
 
+                // Altera a senha do usuário com base no perfil
                 switch ((EPerfil)perfilUsuario)
                 {
                     case EPerfil.Diretor:
                         var diretorService = await _LoginDiretorService.BuscarPorEmail(email);
                         diretorService.Senha = BCrypt.Net.BCrypt.HashPassword(NovaSenha);
-                        _diretorService.Editar(diretorService);
+                        await _diretorService.Editar(diretorService);
                         break;
                     case EPerfil.Docente:
                         var docenteService = await _LoginDocenteService.BuscarPorEmail(email);
                         docenteService.Senha = BCrypt.Net.BCrypt.HashPassword(NovaSenha);
-                        _docenteService.Editar(docenteService);
+                        await _docenteService.Editar(docenteService);
                         break;
                     case EPerfil.Aluno:
                         var alunoService = await _LoginAlunoService.BuscarPorEmail(email);
                         alunoService.Senha = BCrypt.Net.BCrypt.HashPassword(NovaSenha);
-                        _alunoService.Editar(alunoService);
+                        await _alunoService.Editar(alunoService);
                         break;
                     default:
                         throw new Exception("E-mail do usuário inválido");
                 }
 
-
                 TempData["SenhaAlterada"] = "Sua senha foi alterada com sucesso!";
-
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception msg)
             {
-
                 throw new Exception(msg.Message);
             }
-
         }
 
-        // GET: LoginController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: LoginController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: LoginController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Login login)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: LoginController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: LoginController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Login login)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: LoginController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: LoginController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Login login)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

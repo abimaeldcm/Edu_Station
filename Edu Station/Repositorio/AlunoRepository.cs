@@ -6,15 +6,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Edu_Station.Repositorio
 {
+    // Repositório responsável por lidar com as operações CRUD para a entidade Aluno e operações de login.
     public class AlunoRepository : ICRUDRepository<Aluno>, ILoginRepository<Aluno, Login>
     {
         private readonly BancoContext _bancoContext;
 
+        // Construtor que injeta o contexto do banco de dados.
         public AlunoRepository(BancoContext bancoContext)
         {
             _bancoContext = bancoContext;
         }
 
+        // Método para adicionar um novo aluno ao banco de dados.
         public async Task<Aluno> Adicionar(Aluno adicionar)
         {
             try
@@ -26,12 +29,11 @@ namespace Edu_Station.Repositorio
             }
             catch (Exception)
             {
-
                 throw new Exception("Erro ao adicionar o Aluno no banco");
             }
+        }
 
-        }        
-
+        // Método para buscar um aluno pelo seu ID.
         public async Task<Aluno> Buscar(Guid id)
         {
             try
@@ -45,6 +47,7 @@ namespace Edu_Station.Repositorio
             }
         }
 
+        // Método para buscar um aluno pelo seu email.
         public async Task<Aluno> BuscarPorEmail(string email)
         {
             try
@@ -58,6 +61,7 @@ namespace Edu_Station.Repositorio
             }
         }
 
+        // Método para excluir um aluno pelo seu ID.
         public async Task<bool> Delete(Guid id)
         {
             try
@@ -66,7 +70,6 @@ namespace Edu_Station.Repositorio
                 _bancoContext.Alunos.Remove(alunoBanco);
                 await _bancoContext.SaveChangesAsync();
                 return true;
-
             }
             catch (Exception)
             {
@@ -74,11 +77,12 @@ namespace Edu_Station.Repositorio
             }
         }
 
+        // Método para editar um aluno.
         public async Task<Aluno> Editar(Aluno editar)
         {
             try
             {
-                Aluno alunoBanco = await Buscar(editar.Id);                
+                Aluno alunoBanco = await Buscar(editar.Id);
                 _bancoContext.Alunos.Update(editar);
                 await _bancoContext.SaveChangesAsync();
                 return editar;
@@ -89,13 +93,14 @@ namespace Edu_Station.Repositorio
             }
         }
 
+        // Método para obter todos os alunos do banco de dados.
         public async Task<List<Aluno>> GetAll()
         {
             try
             {
                 return await _bancoContext.Alunos
-                    .Include(x => x.Discipinas)
-                    .Include(x => x.Turma)
+                    .Include(x => x.Discipinas) // Inclui as disciplinas relacionadas ao aluno.
+                    .Include(x => x.Turma) // Inclui a turma relacionada ao aluno.
                     .ToListAsync();
             }
             catch (Exception)
@@ -104,6 +109,7 @@ namespace Edu_Station.Repositorio
             }
         }
 
+        // Método para realizar o login de um aluno.
         public async Task<Aluno> Logar(Login login)
         {
             try

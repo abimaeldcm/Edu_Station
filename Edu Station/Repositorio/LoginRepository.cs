@@ -5,15 +5,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Edu_Station.Repositorio
 {
+    // Repositório responsável por lidar com as operações CRUD para a entidade Login.
     public class LoginRepository : ICRUDRepository<Login>
     {
         private readonly BancoContext _bancoContext;
 
+        // Construtor que injeta o contexto do banco de dados.
         public LoginRepository(BancoContext bancoContext)
         {
             _bancoContext = bancoContext;
         }
 
+        // Método para adicionar um novo login ao banco de dados.
         public async Task<Login> Adicionar(Login adicionar)
         {
             try
@@ -25,12 +28,12 @@ namespace Edu_Station.Repositorio
             }
             catch (Exception)
             {
-
                 throw new Exception("Erro ao adicionar o Login no banco");
             }
 
         }
 
+        // Método para buscar um login pelo seu ID.
         public async Task<Login> Buscar(Guid id)
         {
             try
@@ -44,6 +47,7 @@ namespace Edu_Station.Repositorio
             }
         }
 
+        // Método para excluir um login pelo seu ID.
         public async Task<bool> Delete(Guid id)
         {
             try
@@ -65,10 +69,12 @@ namespace Edu_Station.Repositorio
             }
         }
 
+        // Método para editar um login.
         public async Task<Login> Editar(Login editar)
         {
             try
             {
+                // Verifica se o login existe pelo CPF do usuário.
                 Diretor LoginBanco = await _bancoContext.Diretores.FirstOrDefaultAsync(x => x.CPF == editar.User);
                 if (LoginBanco is null)
                 {
@@ -84,6 +90,7 @@ namespace Edu_Station.Repositorio
             }
         }
 
+        // Método para obter todos os logins do banco de dados.
         public async Task<List<Login>> GetAll()
         {
             try
@@ -97,4 +104,3 @@ namespace Edu_Station.Repositorio
         }
     }
 }
-

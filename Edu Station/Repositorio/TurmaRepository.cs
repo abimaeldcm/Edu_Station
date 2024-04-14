@@ -5,14 +5,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Edu_Station.Repositorio
 {
+    // Repositório responsável por lidar com as operações CRUD para a entidade Turma.
     public class TurmaRepository : ICRUDRepository<Turma>
     {
         private readonly BancoContext _bancoContext;
 
+        // Construtor que injeta o contexto do banco de dados.
         public TurmaRepository(BancoContext bancoContext)
         {
             _bancoContext = bancoContext;
         }
+
+        // Método para adicionar uma nova turma ao banco de dados.
         public async Task<Turma> Adicionar(Turma adicionar)
         {
             try
@@ -24,12 +28,11 @@ namespace Edu_Station.Repositorio
             }
             catch (Exception)
             {
-
-                throw new Exception("Erro ao adicionar o Turma no banco");
+                throw new Exception("Erro ao adicionar a Turma no banco");
             }
-
         }
 
+        // Método para buscar uma turma pelo seu ID.
         public async Task<Turma> Buscar(Guid id)
         {
             try
@@ -39,10 +42,11 @@ namespace Edu_Station.Repositorio
             }
             catch (Exception)
             {
-                throw new Exception("Erro ao buscar o Turma no banco");
+                throw new Exception("Erro ao buscar a Turma no banco");
             }
         }
 
+        // Método para excluir uma turma pelo seu ID.
         public async Task<bool> Delete(Guid id)
         {
             try
@@ -54,10 +58,11 @@ namespace Edu_Station.Repositorio
             }
             catch (Exception)
             {
-                throw new Exception("Erro ao buscar o Turma no banco");
+                throw new Exception("Erro ao excluir a Turma no banco");
             }
         }
 
+        // Método para editar uma turma.
         public async Task<Turma> Editar(Turma editar)
         {
             try
@@ -69,20 +74,21 @@ namespace Edu_Station.Repositorio
             }
             catch (Exception)
             {
-                throw new Exception("Erro ao buscar o Turma no banco");
+                throw new Exception("Erro ao editar a Turma no banco");
             }
         }
 
+        // Método para obter todas as turmas do banco de dados.
         public async Task<List<Turma>> GetAll()
         {
             try
             {
-                var a = await _bancoContext.Turmas.ToListAsync();
-                return a;
+                var turmas = await _bancoContext.Turmas.ToListAsync();
+                return turmas;
             }
             catch (Exception)
             {
-                throw new Exception("Erro ao buscar os Turmas no banco");
+                throw new Exception("Erro ao buscar as Turmas no banco");
             }
         }
     }
